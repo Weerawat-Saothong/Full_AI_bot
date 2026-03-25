@@ -1,0 +1,9 @@
+{
+    "current_model": "ai_trading_model.h5",
+    "version": 1,
+    "last_retrain": "2026-03-24T15:35:40",
+    "versions": [
+        "ai_trading_model_v1.h5",
+        "ai_trading_model_v2.h5"
+    ]
+}
