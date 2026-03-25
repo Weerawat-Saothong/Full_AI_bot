@@ -28,33 +28,26 @@ class MT5Connector:
             return tick.bid, tick.ask
         return None, None
 
-    def send_order(self, action, lot, sl_points=None, tp_points=None):
-        """ส่งออเดอร์ Buy/Sell"""
+    def send_order(self, action, lot, sl_price=None, tp_price=None):
+        """ส่งออเดอร์ Buy/Sell พร้อม SL/TP ที่คำนวณมาแล้ว"""
         price_bid, price_ask = self.get_current_price()
         if not price_bid: return None
 
         order_type = mt5.ORDER_TYPE_BUY if action == 'BUY' else mt5.ORDER_TYPE_SELL
         price = price_ask if action == 'BUY' else price_bid
         
-        # คำนวณ SL/TP
-        sl = price - (sl_points * mt5.symbol_info(self.symbol).point) if action == 'BUY' and sl_points else None
-        if action == 'SELL' and sl_points: sl = price + (sl_points * mt5.symbol_info(self.symbol).point)
-        
-        tp = price + (tp_points * mt5.symbol_info(self.symbol).point) if action == 'BUY' and tp_points else None
-        if action == 'SELL' and tp_points: tp = price - (tp_points * mt5.symbol_info(self.symbol).point)
-
         request = {
             "action": mt5.TRADE_ACTION_DEAL,
             "symbol": self.symbol,
             "volume": lot,
             "type": order_type,
             "price": price,
-            "sl": sl,
-            "tp": tp,
+            "sl": float(sl_price) if sl_price else 0.0,
+            "tp": float(tp_price) if tp_price else 0.0,
             "magic": 123456,
             "comment": "Bot_Gold_AI_Full",
             "type_time": mt5.ORDER_TIME_GTC,
-            "type_filling": mt5.ORDER_FILLING_IOC,
+            "type_filling": mt5.ORDER_FILLING_IOC, # หรือ ORDER_FILLING_FOK ตามค่ายโบรก
         }
 
         result = mt5.order_send(request)

@@ -1,0 +1,30 @@
+# Secret Files
+.env
+.env.example
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.ipynb_checkpoints
+
+# OS Files
+.DS_Store
+
+# Data & Models (Local Only)
+logs/*.log
+models/*.h5
+models/backups/
+data/trade_buffer.csv

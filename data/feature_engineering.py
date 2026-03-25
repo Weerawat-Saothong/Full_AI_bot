@@ -9,23 +9,31 @@ class FeatureEngineer:
     
     def generate_features(self, df):
         """สร้างฟีเจอร์จากดิบข้อมูล"""
+        # Copy df to avoid original changes
+        data = df.copy()
+        
         # EMA
-        df['ema_9'] = df['close'].ewm(span=9, adjust=False).mean()
-        df['ema_21'] = df['close'].ewm(span=21, adjust=False).mean()
+        data['ema_9'] = data['close'].ewm(span=9, adjust=False).mean()
+        data['ema_21'] = data['close'].ewm(span=21, adjust=False).mean()
         
         # RSI
-        delta = df['close'].diff()
+        delta = data['close'].diff()
         gain = (delta.where(delta > 0, 0)).rolling(window=14).mean()
         loss = (-delta.where(delta < 0, 0)).rolling(window=14).mean()
         rs = gain / loss
-        df['rsi_14'] = 100 - (100 / (1 + rs))
+        data['rsi_14'] = 100 - (100 / (1 + rs))
         
-        # ATR (Simple version)
-        df['atr_14'] = df['high'] - df['low'] # Placeholder
+        # ✅ ATR (Proper Calculation for SL/TP)
+        high_low = data['high'] - data['low']
+        high_close = np.abs(data['high'] - data['close'].shift())
+        low_close = np.abs(data['low'] - data['close'].shift())
+        ranges = pd.concat([high_low, high_close, low_close], axis=1)
+        true_range = np.max(ranges, axis=1)
+        data['atr_14'] = true_range.rolling(14).mean()
         
         # MACD
-        exp1 = df['close'].ewm(span=12, adjust=False).mean()
-        exp2 = df['close'].ewm(span=26, adjust=False).mean()
-        df['macd'] = exp1 - exp2
+        exp1 = data['close'].ewm(span=12, adjust=False).mean()
+        exp2 = data['close'].ewm(span=26, adjust=False).mean()
+        data['macd'] = exp1 - exp2
         
-        return df.dropna()
+        return data.dropna()

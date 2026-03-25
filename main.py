@@ -75,8 +75,8 @@ class GoldAIBot:
                     time.sleep(10)
                     continue
                 
-                # 3. Check for Entry
-                signal, confidence, last_features = self.strategy.check_entry_signal(df)
+                # 3. Check for Entry (AI คำนวณสัญญาณ และ SL/TP ให้เอง)
+                signal, confidence, last_features, sl, tp = self.strategy.check_entry_signal(df)
                 
                 if signal in ['BUY', 'SELL']:
                     import MetaTrader5 as mt5
@@ -84,7 +84,8 @@ class GoldAIBot:
                     
                     if len(positions) < MAX_TRADES:
                         logger.info(f"🎯 Signal: {signal} | Confidence: {confidence:.2%}")
-                        res = self.mt5.send_order(signal, LOT_SIZE, SL_PIPS, TP_PIPS)
+                        logger.info(f"📏 AI Calculated SL: {sl:.2f} | TP: {tp:.2f}")
+                        res = self.mt5.send_order(signal, LOT_SIZE, sl, tp)
                         # ในระบบสมบูรณ์ MT5 จะแจ้งปิดไม้เอง และเราต้องดึงประวัติมาบันทึก log_trade_complete
                 
                 time.sleep(60) # ตรวจสอบทุก 1 นาที
