@@ -5,9 +5,9 @@
 # =========================
 
 # ✅ MT5 ACCOUNT SETTINGS
-MT5_LOGIN = 12345678          # เลขบัญชี MT5
-MT5_PASSWORD = "your_password" # รหัสผ่าน
-MT5_SERVER = "Exness-MT5-Real" # เซิร์ฟเวอร์
+MT5_LOGIN = 183946491          # เลขบัญชี MT5
+MT5_PASSWORD = "Joe0954017406!" # รหัสผ่าน
+MT5_SERVER = "Exness-MT5Real25" # เซิร์ฟเวอร์
 MT5_SYMBOL = "XAUUSD"          # สัญลักษณ์ที่เทรด
 
 # ✅ TRADING PARAMETERS
